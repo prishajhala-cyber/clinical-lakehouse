@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_fhir__patients
+    description: One row per patient, flattened from FHIR Patient resources.
+    columns:
+      - name: patient_id
+        data_tests: [unique, not_null]
+
+  - name: stg_fhir__observations
+    description: FHIR lab results with numeric values, in the shared lab-result shape.
+    columns:
+      - name: patient_id
+        data_tests: [not_null]
+      - name: observed_at_utc
+        data_tests: [not_null]
+
+  - name: stg_hl7__observations
+    description: >
+      HL7 v2 lab results in the shared lab-result shape. These tests are the
+      quality gate for the lab feed: if the lab system changes its message format,
+      they fail and stop bad data from moving downstream.
+    columns:
+      - name: patient_id
+        data_tests: [not_null]
+      - name: result_value
+        data_tests: [not_null]
+      - name: result_unit
+        data_tests: [not_null]
+      - name: observed_at_utc
+        data_tests: [not_null]
+      - name: result_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['final', 'corrected', 'preliminary', 'cancelled']

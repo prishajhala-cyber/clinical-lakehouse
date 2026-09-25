@@ -1,0 +1,15 @@
+name: clinical_dbt
+version: "1.0.0"
+profile: clinical_dbt
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+
+models:
+  clinical_dbt:
+    staging:
+      +schema: silver
+      +materialized: view
+    intermediate:
+      +schema: silver
+      +materialized: table

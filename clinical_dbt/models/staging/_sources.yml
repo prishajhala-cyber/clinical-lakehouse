@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: Raw records loaded from the landing stage by COPY INTO.
+    database: CLINICAL
+    schema: BRONZE
+    config:
+      loaded_at_field: loaded_at
+      freshness:
+        warn_after: {count: 24, period: hour}
+    tables:
+      - name: fhir_patients
+        description: FHIR R4 Patient resources, one per row.
+      - name: fhir_observations
+        description: FHIR R4 Observation resources, one per row.
+      - name: hl7_observations
+        description: HL7 v2 ORU^R01 lab results, parsed to JSON at ingestion.

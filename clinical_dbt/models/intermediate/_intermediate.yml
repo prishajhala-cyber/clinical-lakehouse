@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: int_lab_results_deduped
+    description: >
+      Lab results from FHIR and HL7 combined and deduplicated on
+      patient + LOINC code + observation time. FHIR takes precedence.
+    columns:
+      - name: lab_result_id
+        description: Surrogate key hashed from the business key.
+        data_tests: [unique, not_null]
+      - name: source_system
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['fhir_r4', 'hl7v2']
