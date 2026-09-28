@@ -13,3 +13,4 @@ lab_reference/
 .terraform/
 *.tfstate
 *.tfstate.backup
+terraform.tfvars
