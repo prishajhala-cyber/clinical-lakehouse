@@ -68,21 +68,36 @@ def put_files(cursor, local_pattern, stage_folder):
     skipped = sum(1 for row in results if row[6] == "SKIPPED")
     print(f"  {stage_folder}: {uploaded} uploaded, {skipped} skipped (already in stage)")
 
-def main():
-    count = write_parsed_hl7()
-    print(f"Parsed {count} HL7 messages into {PARSED_DIR}")
 
-    print("Uploading to @landing:")
+def upload_fhir():
+    """Upload the FHIR NDJSON files to the landing stage."""
+    print("Uploading FHIR files to @landing:")
     conn = connect()
     try:
         cursor = conn.cursor()
         put_files(cursor, FHIR_DIR / "Patient.ndjson", "fhir/Patient")
         put_files(cursor, FHIR_DIR / "Observation.ndjson", "fhir/Observation")
+    finally:
+        conn.close()
+
+
+def upload_hl7():
+    """Parse HL7 messages, then upload raw and parsed versions to the landing stage."""
+    count = write_parsed_hl7()
+    print(f"Parsed {count} HL7 messages into {PARSED_DIR}")
+    print("Uploading HL7 files to @landing:")
+    conn = connect()
+    try:
+        cursor = conn.cursor()
         put_files(cursor, HL7_DIR / "*.hl7", "hl7_raw")
         put_files(cursor, PARSED_DIR / "*.json", "hl7_parsed")
     finally:
         conn.close()
 
+
+def main():
+    upload_fhir()
+    upload_hl7()
 
 if __name__ == "__main__":
     main()

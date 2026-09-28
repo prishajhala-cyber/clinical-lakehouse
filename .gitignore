@@ -6,3 +6,5 @@ target/
 dbt_packages/
 logs/
 .DS_Store
+.dagster/
+.tmp_dagster_home_*/
