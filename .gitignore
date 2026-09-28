@@ -8,3 +8,8 @@ logs/
 .DS_Store
 .dagster/
 .tmp_dagster_home_*/
+instrument_share/
+lab_reference/
+.terraform/
+*.tfstate
+*.tfstate.backup
